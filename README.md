@@ -51,6 +51,8 @@ Finday의 로그인 과정은 이중 인증 구조로 되어 있습니다:
 ### 회원가입 및 이중 로그인 (JWT + 얼굴인증)
 https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 
+---
+
 ### 계좌 연결, 통합조회
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/c2537045-c385-4bcc-827d-7ed9e6733237" />
 1. 홈화면에서 "계좌 연동하기" 버튼을 클릭합니다.
@@ -66,6 +68,9 @@ https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/318947a4-d601-4d55-8a97-ca38e517991a" />
 5. 홈화면에서도 확인
+
+---
+
 
 ### 카드 연결 및 조회
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/d365849d-e280-43f6-a414-1b66af9d749c" />
@@ -83,6 +88,8 @@ https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/34f4da97-a04b-4deb-a7df-c1d1ba1adc59" />
 5. 연동된 카드를 확인 가능합니다.
 
+---
+
 ### 소비 항목 기반 거래 생성
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/6dcb7ded-6dfa-4cfe-8b75-172e4a616a33" />
 1. 홈화면에서 "거래 생성" 버튼을 클릭합니다.
@@ -98,6 +105,8 @@ https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/1ea88066-2675-4c0d-9579-e4fe305c72a2" />
 4. 안면인증을 진행 후 인증에 성공할 시, 결제가 완료됩니다.
 
+---
+
 
 ### 기간별 소비 내역 조회 및 시각화
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/84bf6e30-6501-4f0a-9972-5a018f65d317" />
@@ -108,6 +117,8 @@ https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/97fddb8d-955f-48ce-a18e-2247e8aaeb8a" />
 3. 연동된 은행 선택, 기간(월별) 선택하여 원하는 거래 내역 정보를 볼 수 있습니다.
+
+---
 
 ### 총 자산 / 소비 분석 및 계좌별 잔액 통합 확인 및 이체
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/442ca738-05ed-4b71-96e8-cf8feac287c0" />
@@ -127,6 +138,8 @@ https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 
 <img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/ab7bc2f8-e570-4a6b-a2b5-74f9689196c2" />
 6. 이체 성공 시, 계좌 조회 페이지로 이동하며, 잔액 차감이 완료된 현재 잔액을 확인할 수 있습니다.
+
+---
 
 ## 기술 스택
 React 18 + React Router
