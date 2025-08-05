@@ -52,80 +52,80 @@ Finday의 로그인 과정은 이중 인증 구조로 되어 있습니다:
 https://github.com/user-attachments/assets/34d98c80-f593-4d67-8e88-2f6f3fe725ee
 
 ### 계좌 연결, 통합조회
-<img width="1346" height="452" alt="image" src="https://github.com/user-attachments/assets/c2537045-c385-4bcc-827d-7ed9e6733237" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/c2537045-c385-4bcc-827d-7ed9e6733237" />
 1. 홈화면에서 "계좌 연동하기" 버튼을 클릭합니다.
 
-<img width="1919" height="1030" alt="image" src="https://github.com/user-attachments/assets/11dfcadc-f190-48a9-b46d-1cb772ac9e17" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/11dfcadc-f190-48a9-b46d-1cb772ac9e17" />
 2. 연동할 금융사를 선택하고 다음을 클릭합니다.
 
-<img width="1919" height="1024" alt="image" src="https://github.com/user-attachments/assets/cdcc6a6e-3a4e-419e-9820-cd305b50fc26" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/cdcc6a6e-3a4e-419e-9820-cd305b50fc26" />
 3. 정보 연동 동의를 클릭합니다.
 
-<img width="1919" height="1026" alt="image" src="https://github.com/user-attachments/assets/288dafee-2c95-4477-9b0b-5ad1262d4560" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/288dafee-2c95-4477-9b0b-5ad1262d4560" />
 4. 연동된 계좌 확인
 
-<img width="1042" height="385" alt="image" src="https://github.com/user-attachments/assets/318947a4-d601-4d55-8a97-ca38e517991a" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/318947a4-d601-4d55-8a97-ca38e517991a" />
 5. 홈화면에서도 확인
 
 ### 카드 연결 및 조회
-<img width="486" height="160" alt="image" src="https://github.com/user-attachments/assets/d365849d-e280-43f6-a414-1b66af9d749c" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/d365849d-e280-43f6-a414-1b66af9d749c" />
 1. 홈화면에서 "내 카드"를 클릭합니다.
 
-<img width="1488" height="712" alt="image" src="https://github.com/user-attachments/assets/06eb81a7-ec1a-4feb-8dea-a6d436bde25f" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/06eb81a7-ec1a-4feb-8dea-a6d436bde25f" />
 2. 카드 연동 버튼을 클릭합니다.
 
-<img width="1919" height="1032" alt="image" src="https://github.com/user-attachments/assets/fe62ba26-a40c-4203-8507-9c41faa3d959" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/fe62ba26-a40c-4203-8507-9c41faa3d959" />
 3. 연동할 금융사를 선택합니다.
 
-<img width="1917" height="1035" alt="image" src="https://github.com/user-attachments/assets/74248f35-a68b-4abe-b0fc-6216dadd6709" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/74248f35-a68b-4abe-b0fc-6216dadd6709" />
 4. 카드 정보 연동 동의를 클릭합니다.
 
-<img width="1919" height="1037" alt="image" src="https://github.com/user-attachments/assets/34f4da97-a04b-4deb-a7df-c1d1ba1adc59" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/34f4da97-a04b-4deb-a7df-c1d1ba1adc59" />
 5. 연동된 카드를 확인 가능합니다.
 
 ### 소비 항목 기반 거래 생성
-<img width="482" height="154" alt="image" src="https://github.com/user-attachments/assets/6dcb7ded-6dfa-4cfe-8b75-172e4a616a33" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/6dcb7ded-6dfa-4cfe-8b75-172e4a616a33" />
 1. 홈화면에서 "거래 생성" 버튼을 클릭합니다.
 
-<img width="1270" height="1023" alt="image" src="https://github.com/user-attachments/assets/0f2e49ee-840e-4be4-a848-df9834024add" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/0f2e49ee-840e-4be4-a848-df9834024add" />
 2. 거래 생성(결제)할 아이템을 클릭합니다.
 
-<img width="1919" height="1029" alt="image" src="https://github.com/user-attachments/assets/f997ac6c-9b02-4ba6-a4ff-7d43ea32661e" />
-<img width="1919" height="1028" alt="image" src="https://github.com/user-attachments/assets/7832f4e0-b5b7-42e5-be5b-1bfee4b97cfc" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/f997ac6c-9b02-4ba6-a4ff-7d43ea32661e" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/7832f4e0-b5b7-42e5-be5b-1bfee4b97cfc" />
 3. 결제 화면에서 결제 수단을 선택합니다.
 
-<img width="1919" height="1021" alt="image" src="https://github.com/user-attachments/assets/bacddb3b-6296-4c9f-b9fd-41dd77032bbf" />
-<img width="1919" height="380" alt="image" src="https://github.com/user-attachments/assets/1ea88066-2675-4c0d-9579-e4fe305c72a2" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/bacddb3b-6296-4c9f-b9fd-41dd77032bbf" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/1ea88066-2675-4c0d-9579-e4fe305c72a2" />
 4. 안면인증을 진행 후 인증에 성공할 시, 결제가 완료됩니다.
 
 
 ### 기간별 소비 내역 조회 및 시각화
-<img width="480" height="140" alt="image" src="https://github.com/user-attachments/assets/84bf6e30-6501-4f0a-9972-5a018f65d317" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/84bf6e30-6501-4f0a-9972-5a018f65d317" />
 1. 홈화면에서 "거래 내역" 버튼을 클릭합니다.
 
-<img width="1918" height="1030" alt="image" src="https://github.com/user-attachments/assets/ed4f1d3a-4a04-4038-814b-1100dcb291e5" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/ed4f1d3a-4a04-4038-814b-1100dcb291e5" />
 2. 초기값(통합, 최근 30일)으로, 거래 내역을 보여줍니다. (계좌, 카드의 구분이 가능합니다.)
 
-<img width="1919" height="1030" alt="image" src="https://github.com/user-attachments/assets/97fddb8d-955f-48ce-a18e-2247e8aaeb8a" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/97fddb8d-955f-48ce-a18e-2247e8aaeb8a" />
 3. 연동된 은행 선택, 기간(월별) 선택하여 원하는 거래 내역 정보를 볼 수 있습니다.
 
 ### 총 자산 / 소비 분석 및 계좌별 잔액 통합 확인 및 이체
-<img width="719" height="394" alt="image" src="https://github.com/user-attachments/assets/442ca738-05ed-4b71-96e8-cf8feac287c0" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/442ca738-05ed-4b71-96e8-cf8feac287c0" />
 1. 홈화면에서 "총 자산" 및 "기간별(월 기준) 소비 분석을 확인할 수 있습니다.(초기값 현재 월)
 
-<img width="487" height="134" alt="image" src="https://github.com/user-attachments/assets/81d422cb-747f-4dfe-96ef-259088e67532" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/81d422cb-747f-4dfe-96ef-259088e67532" />
 2. 홈화면에서 "계좌 조회 및 이체" 버튼을 클릭합니다.
 
-<img width="1919" height="1028" alt="image" src="https://github.com/user-attachments/assets/fcb048f2-e667-4872-b7b4-9f5d7371acbb" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/fcb048f2-e667-4872-b7b4-9f5d7371acbb" />
 3. 연결된 계좌를 확인 가능하며 계좌별 현재 잔액을 확인할 수 있습니다.
 
-<img width="1919" height="1034" alt="image" src="https://github.com/user-attachments/assets/aa76db29-042e-4a89-a81f-5a99cd2f547c" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/aa76db29-042e-4a89-a81f-5a99cd2f547c" />
 4. "이체" 버튼 클릭 시, 얼굴인증을 진행합니다.
 
-<img width="1919" height="1031" alt="image" src="https://github.com/user-attachments/assets/780450da-c9d1-4190-8473-c1b8aea40561" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/780450da-c9d1-4190-8473-c1b8aea40561" />
 5. 인증 성공 시, 계좌 이체 화면으로 이동하며, 모든 정보를 입력(은행 선택 시, 해당 은행에 맞는 계좌 번호 형식 자동 지정)하고 "이체하기" 버튼을 클릭합니다.
 
-<img width="1119" height="922" alt="image" src="https://github.com/user-attachments/assets/ab7bc2f8-e570-4a6b-a2b5-74f9689196c2" />
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/ab7bc2f8-e570-4a6b-a2b5-74f9689196c2" />
 6. 이체 성공 시, 계좌 조회 페이지로 이동하며, 잔액 차감이 완료된 현재 잔액을 확인할 수 있습니다.
 
 ## 기술 스택
