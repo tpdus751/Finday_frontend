@@ -4,12 +4,16 @@ import styled from 'styled-components';
 import api from '../services/api';
 import useUserStore from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
+import FaceAuthModal from '../components/FaceAuthModal'; // ✅ 얼굴 인증 모달 import
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [faceImgUrl, setFaceImgUrl] = useState('');
+  const [showFaceModal, setShowFaceModal] = useState(false);
+
   const { setUser } = useUserStore();
   const navigate = useNavigate();
 
@@ -21,23 +25,42 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-      const res = await api.post('/user/auth/login', {
-        email,
-        password: pw,
-      }, { 
-        headers: {
-          'Content-Type': 'application/json' // ✅ 이걸 명시해야 함
+      const res = await api.post(
+        '/user/auth/login',
+        { email, password: pw },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      });
-      console.log('로그인 성공:', res.data);
-      setUser(res.data); // user 객체 저장
-      navigate('/');
+      );
+
+      console.log('1차 로그인 성공:', res.data);
+      setFaceImgUrl(res.data.faceImgUrl);
+      setShowFaceModal(true); // ✅ 얼굴 인증 모달 띄우기
     } catch (e) {
-      const msg =
-        e.response?.data || '로그인에 실패했습니다. 정보를 다시 확인해주세요.';
+      const msg = e.response?.data || '1차 로그인에 실패했습니다. 정보를 다시 확인해주세요.';
       setError(msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ 얼굴 인증 성공 시 호출
+  const handleFaceSuccess = async () => {
+    try {
+      const loginRes = await api.post('/user/auth/final-login', { email });
+      const jwt = loginRes.data;
+
+      localStorage.setItem('token', jwt);
+      api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+
+      const userRes = await api.get('/user/me');
+      setUser(userRes.data);
+      navigate('/', { replace: true });
+    } catch (err) {
+      console.error('최종 로그인 실패:', err);
+      setError('최종 로그인 처리 중 오류가 발생했습니다.');
     }
   };
 
@@ -67,10 +90,20 @@ export default function LoginPage() {
 
         <Divider />
         <OptionRow>
-          <button>회원가입</button>
+          <button onClick={() => navigate('/signup')}>회원가입</button>
           <button>비밀번호 찾기</button>
         </OptionRow>
       </LoginCard>
+
+      {/* ✅ 얼굴 인증 모달 */}
+      {showFaceModal && (
+        <FaceAuthModal
+          email={email}
+          faceImgUrl={faceImgUrl}
+          onSuccess={handleFaceSuccess}
+          onClose={() => setShowFaceModal(false)}
+        />
+      )}
     </Wrapper>
   );
 }
@@ -87,7 +120,7 @@ const LoginCard = styled.div`
   background: white;
   padding: 40px 32px;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 360px;
   display: flex;

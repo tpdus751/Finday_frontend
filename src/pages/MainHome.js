@@ -1,36 +1,189 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useFinanceStore } from '../store/financeStore';
 import { FaMoneyBillWave, FaPiggyBank, FaChartPie, FaStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Header from '../components/Header';
 import SideMenuDrawer from '../components/SideMenuDrawer';
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '../store/userStore';
+import api from '../services/api';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 
 const HomePage = () => {
-  const totalAssets = useFinanceStore(s => s.totalAssets);
-  const spendingByCategory = useFinanceStore(s => s.spendingBreakdown);
-  const recommendedCard = useFinanceStore(s => s.recommendedCard);
-  const recentTransactions = useFinanceStore(s => s.recentTransactions);
-  const display = totalAssets !== undefined ? totalAssets.toLocaleString() : '...';
-
   const [centerIndex, setCenterIndex] = useState(0);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const carouselRef = useRef();
   const navigate = useNavigate();
+  const cardRefs = useRef([]);
+  const [zOrders, setZOrders] = useState([3, 2, 1, 0]);
+  const [connectedBanks, setConnectedBanks] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const { user } = useUserStore();
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
 
+
+  const COLORS = ['#00FFAE', '#00BFAE', '#00A0FF', '#875EFF', '#FF6F91', '#FFD166', '#06D6A0'];
+
+  const ConsumptionPieChart = ({ data }) => (
+    <ResponsiveContainer width="100%" height={180}>
+      <PieChart>
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          stroke="none" // ✅ 외곽선 제거
+          outerRadius={70}
+          innerRadius={20} // 도넛 형태로 시각적으로 더 깔끔
+          labelLine={false}
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{ backgroundColor: '#1e1e1e', border: 'none', borderRadius: 8 }}
+          itemStyle={{ color: '#fff' }}
+          formatter={(value, name) => [`${value.toLocaleString()}원`, name]}
+        />
+        <Legend
+          verticalAlign="bottom"
+          iconType="circle"
+          align="center"
+          wrapperStyle={{
+            paddingTop: 4,
+            fontSize: 10,
+            color: '#ccc',
+          }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  );
+
+
+  const fetchTransactionsForPie = async () => {
+    try {
+      const res = await api.get('/transaction/list', {
+        params: {
+          userNo: user?.userNo,
+          userSpecificNo: user?.userSpecificNo,
+          bankName: null,
+          filterType: 'month',
+          month: selectedMonth,
+        },
+      });
+
+      const data = res.data || [];
+      const categoryCount = {};
+      data.forEach(tx => {
+        const category = tx.transactionCategory || '기타';
+        categoryCount[category] = (categoryCount[category] || 0) + tx.amount;
+      });
+
+      const formatted = Object.entries(categoryCount).map(([category, amount]) => ({
+        name: category,
+        value: amount,
+      }));
+
+      setChartData(formatted);
+    } catch (err) {
+      console.error('소비 분석 데이터 불러오기 실패:', err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchConnectedBanks = async () => {
+      try {
+        const res = await api.get('/bank/connected', {
+          params: {
+            userNo: user?.userNo,
+            userSpecificNo: user?.userSpecificNo,
+          },
+        });
+        setConnectedBanks(res.data);
+      } catch (e) {
+        console.error('연결된 은행 조회 실패:', e);
+        setConnectedBanks([]);
+      }
+    };
+    fetchConnectedBanks();
+  }, []);
+
+  useEffect(() => {
+    fetchTransactionsForPie();
+  }, [selectedMonth]);
+
+
+  const isEmpty = connectedBanks.length === 0;
+
+  const totalBalance = useMemo(() => {
+    return Array.isArray(connectedBanks)
+      ? connectedBanks.reduce((sum, acc) => sum + (acc.balance || 0), 0)
+      : 0;
+  }, [connectedBanks]);
+
+  const currentMonthLabel = selectedMonth
+    ? `${parseInt(selectedMonth.split('-')[1])}월 소비 분석`
+    : '소비 분석';
   const cards = useMemo(() => [
-    { title:'총 자산', content: (<><Amount>{display}</Amount><Subtitle>모든 계좌 합산</Subtitle></>) },
-    { title:'소비 분석', content: spendingByCategory ?
-        (<><ul>{spendingByCategory.slice(0,3).map(c=><li key={c.name}>{c.name}: <strong>{c.percent}%</strong></li>)}</ul><Subtitle>이번 달 지출 요약</Subtitle></>) :
-        <Loading>분석 중...</Loading>
+    {
+      title: '총 자산',
+      content: isEmpty ? (
+        <>
+          <Amount>0원</Amount>
+          <Subtitle>연결된 계좌가 없습니다</Subtitle>
+          <ConnectButton onClick={() => navigate('/accounts/connect')}>계좌 연동하기</ConnectButton>
+        </>
+      ) : (
+        <>
+          <Amount>{totalBalance.toLocaleString()}원</Amount>
+          <Subtitle>모든 계좌 합산</Subtitle>
+        </>
+      )
     },
-    { title:'추천 카드', content: recommendedCard ?
-        (<><Recommendation>{recommendedCard.name}</Recommendation><p>{recommendedCard.benefit}</p><LearnBtn>자세히 보기</LearnBtn></>) :
-        <Loading>추천 중...</Loading>
-    },
-    { title:'최근 거래', content: (<><FilterLabel>기간:</FilterLabel><FilterSelect><option>최근30일</option><option>최근7일</option><option>오늘</option></FilterSelect><TransList>{recentTransactions ? recentTransactions.slice(0,3).map(t=><Trans key={t.id}><span>{t.date}</span><span>{t.merchant}</span><span>{t.amount}</span></Trans>) : <Loading>로딩중...</Loading>}</TransList></>) }
-  ], [display, spendingByCategory, recommendedCard, recentTransactions]);
+    {
+    title: (
+      <TitleWithSelector>
+        <span>{currentMonthLabel}</span>
+        <MonthSelector value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+          {Array.from({ length: 12 }, (_, i) => {
+            const monthStr = `2025-${String(i + 1).padStart(2, '0')}`;
+            return <option key={monthStr} value={monthStr}>{monthStr}</option>;
+          })}
+        </MonthSelector>
+      </TitleWithSelector>
+    ),
+    content: chartData.length > 0 ? (
+      <ConsumptionPieChart data={chartData} />
+    ) : (
+      <Loading>거래 내역이 존재하지 않습니다...</Loading>
+    )
+  },
+    {
+      title: '최근 거래',
+      content: (
+        <>
+          <FilterLabel>기간:</FilterLabel>
+          <FilterSelect>
+            <option>최근30일</option>
+            <option>최근7일</option>
+            <option>오늘</option>
+          </FilterSelect>
+          <TransList>
+            <Trans>
+              <span>2025-06-28</span>
+              <span>샘플 상점</span>
+              <span>12,000원</span>
+            </Trans>
+          </TransList>
+        </>
+      )
+    }
+  ], [isEmpty, navigate, chartData]); // ✅ chartData 추가!
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,17 +206,13 @@ const HomePage = () => {
     });
   };
 
-  const cardRefs = useRef([]);
-  const [zOrders, setZOrders] = useState([3, 2, 1, 0]);
-
   return (
     <Container>
       <Header onMenuClick={() => setDrawerOpen(true)} />
       {isDrawerOpen && <SideMenuDrawer visible={true} onClose={() => setDrawerOpen(false)} />}
-
       <Main>
         <CarouselWrapper>
-          <Nav onClick={() => setCenterIndex((centerIndex - 1 + cards.length) % cards.length)}><FaChevronLeft/></Nav>
+          <Nav onClick={() => setCenterIndex((centerIndex - 1 + cards.length) % cards.length)}><FaChevronLeft /></Nav>
           <Carousel ref={carouselRef}>
             {cards.map((c, i) => (
               <Card
@@ -93,7 +242,7 @@ const HomePage = () => {
               </Card>
             ))}
           </Carousel>
-          <Nav onClick={() => setCenterIndex((centerIndex + 1) % cards.length)}><FaChevronRight/></Nav>
+          <Nav onClick={() => setCenterIndex((centerIndex + 1) % cards.length)}><FaChevronRight /></Nav>
         </CarouselWrapper>
 
         <QuickActions>
@@ -111,7 +260,7 @@ const HomePage = () => {
           </ActionCard>
           <ActionCard onClick={() => navigate('/cards')}>
             <FaStar size={20} />
-            <ActionLabel>카드 관리</ActionLabel>
+            <ActionLabel>내 카드</ActionLabel>
           </ActionCard>
         </QuickActions>
       </Main>
@@ -158,8 +307,6 @@ const CardTitle = styled.h3`margin-bottom: 0.5rem;`;
 const CardContent = styled.div``;
 const Amount = styled.div`font-size: 1.3rem; font-weight: bold;`;
 const Subtitle = styled.div`font-size: 0.9rem; opacity: 0.7;`;
-const Recommendation = styled.h4`margin: 0.3rem 0;`;
-const LearnBtn = styled.button`font-size: 0.8rem; background: none; color: #ccc; border: 1px solid #444; padding: 0.3rem 0.5rem; border-radius: 8px;`;
 const Loading = styled.p`font-style: italic; opacity: 0.6;`;
 const FilterLabel = styled.label`font-size: 0.8rem;`;
 const FilterSelect = styled.select`background:#111; color:#fff; margin-left: 0.5rem;`;
@@ -198,3 +345,34 @@ const ActionCard = styled.div`
   }
 `;
 const ActionLabel = styled.span`margin-top: 0.5rem; font-size: 0.85rem;`;
+const ConnectButton = styled.button`
+  margin-top: 0.6rem;
+  background-color: #00ffae;
+  color: #0a0a0a;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  cursor: pointer;
+  &:hover {
+    background-color: #00e3a0;
+  }
+`;
+const TitleWithSelector = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: bold;
+`;
+
+const MonthSelector = styled.select`
+  margin-left: 0.5rem;
+  background: #111;
+  color: #fff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+  font-size: 0.8rem;
+`;

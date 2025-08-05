@@ -8,6 +8,7 @@ import { FaWallet, FaRegCalendarAlt } from 'react-icons/fa';
 import api from '../services/api';
 import useUserStore from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
+import FaceAuthModal from '../components/FaceAuthModal';
 
 export default function AccountOutlook() {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -16,23 +17,32 @@ export default function AccountOutlook() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
   const { user } = useUserStore();
-  const userNo = user?.userNo;
+  const userSpecificNo = user?.userSpecificNo;
   const navigate = useNavigate();
+  const [authModalVisible, setAuthModalVisible] = useState(false);
+  const [pendingTransfer, setPendingTransfer] = useState(null);
 
   useEffect(() => {
-    const fetchAccounts = async () => {
-      if (!userNo) return;
+    const fetchConnectedAccounts = async () => {
       try {
-        const res = await api.get(`/account/all`, { params: { userNo } });
-        setAccounts(res.data);
+        const res = await api.get('/bank/connected', {
+          params: { 
+            userNo: user?.userNo,
+            userSpecificNo: userSpecificNo // ✅ 사용자 고유 번호 전달
+           }
+        }); // ✅ 은행 연결 여부 확인
+        console.log('연결된 계좌:', res.data);
+        setAccounts(res.data); // ✅ 연결된 은행명 배열 or 계좌 배열
       } catch (e) {
-        console.error('계좌 조회 실패:', e);
+        console.error('연동된 계좌 조회 실패:', e);
+        setAccounts([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchAccounts();
-  }, [userNo]);
+
+    fetchConnectedAccounts();
+  }, []);
 
   useEffect(() => {
     if (accounts.length <= 1) return;
@@ -49,14 +59,22 @@ export default function AccountOutlook() {
 
       <Content>
         <TitleWrapper>
-          <Title>보유 계좌</Title>
-          <CreateButton onClick={() => navigate('/create_account')}>+ 계좌 개설</CreateButton>
+          <Title>연결된 계좌</Title>
+          <AddAccountButton onClick={() => navigate('/accounts/connect')}>
+            + 계좌 연동
+          </AddAccountButton>
         </TitleWrapper>
 
         {loading ? (
           <LoadingMsg>불러오는 중...</LoadingMsg>
         ) : accounts.length === 0 ? (
-          <EmptyMsg>보유 중인 계좌가 없습니다.</EmptyMsg>
+          <EmptyState>
+            <EmptyMsg>아직 연동된 계좌가 없어요</EmptyMsg>
+            <ConnectDescription>금융 계좌를 연동하고 자산을 한눈에 관리해보세요.</ConnectDescription>
+            <ConnectButton onClick={() => navigate('/accounts/connect')}>
+              계좌 연동하기
+            </ConnectButton>
+          </EmptyState>
         ) : (
           <CardListWrapper>
             {accounts.map((acc, index) => {
@@ -68,7 +86,7 @@ export default function AccountOutlook() {
 
               return (
                 <AccountCard
-                  key={acc.accountNo}
+                  key={acc.accountNumber}
                   offset={offset}
                   isActive={isActive}
                   isHovered={isHovered}
@@ -78,7 +96,10 @@ export default function AccountOutlook() {
                 >
                   <IconWrapper><FaWallet size={22} /></IconWrapper>
                   <Info>
-                    <BankName>{acc.bankName}</BankName>
+                    <BankNameWithLogo>
+                      {acc.bankLogoImgUrl && <BankLogo src={acc.bankLogoImgUrl} alt="bank logo" />}
+                      <AccountNameText>{acc.accountName}</AccountNameText>
+                    </BankNameWithLogo>
                     <AccountNumber>{acc.accountNumber}</AccountNumber>
                     <Alias>{acc.alias}</Alias>
 
@@ -94,7 +115,12 @@ export default function AccountOutlook() {
 
                     {acc.status !== 'CLOSED' && (
                       <Row>
-                        <TransferButton onClick={() => navigate(`/accounts/transfer?accountNo=${acc.accountNo}`)}>
+                        <TransferButton
+                          onClick={() => {
+                            setPendingTransfer({ bank: acc.bankName, accountNumber: acc.accountNumber });
+                            setAuthModalVisible(true);
+                          }}
+                        >
                           이체
                         </TransferButton>
                       </Row>
@@ -106,6 +132,19 @@ export default function AccountOutlook() {
           </CardListWrapper>
         )}
       </Content>
+
+      {authModalVisible && (
+        <FaceAuthModal
+          email={user?.email}
+          faceImgUrl={user?.faceImgUrl}
+          onSuccess={() => {
+            setAuthModalVisible(false);
+            if (pendingTransfer)
+              navigate(`/accounts/transfer?bank=${pendingTransfer.bank}&accountNumber=${pendingTransfer.accountNumber}`);
+          }}
+          onClose={() => setAuthModalVisible(false)}
+        />
+      )}
 
       <Footer />
     </Wrapper>
@@ -297,4 +336,85 @@ const TransferButton = styled.button`
     background-color: #00e3a0;
     transform: scale(1.05);
   }
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  max-width: 400px;
+`;
+
+const ConnectDescription = styled.div`
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+  margin-bottom: 1.2rem;
+`;
+
+const ConnectButton = styled.button`
+  background-color: #00ffae;
+  color: #0a0a0a;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 255, 174, 0.3);
+
+  &:hover {
+    background-color: #00e3a0;
+    transform: scale(1.03);
+  }
+`;
+
+const AddAccountButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #00ffae;
+  color: #0a0a0a;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 255, 174, 0.3);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #00e3a0;
+  }
+`;
+
+const BankNameWithLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+`;
+
+const BankLogo = styled.img`
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 50%;      // ✅ 동그랗게 만듦
+  background-color: #fff;  // ✅ 이미지가 없을 경우 대비
+`;
+
+const AccountNameText = styled.div`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ccc;
 `;
